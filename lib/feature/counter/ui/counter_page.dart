@@ -14,7 +14,6 @@ class _CounterPageState extends State<CounterPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     context.read<CounterBloc>().add(CounterIncrementEvent());
   }
@@ -22,54 +21,94 @@ class _CounterPageState extends State<CounterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text("Counter Page",
-          style: TextStyle(
-              color: Colors.white, fontWeight: FontWeight.bold
-          ),),
-        centerTitle: true,
-        elevation: 5,
-        backgroundColor: Colors.blueAccent,
-      ),
-
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          context.read<CounterBloc>().add(CounterIncrementEvent());
-        },
-        shape: CircleBorder(),
-        backgroundColor: Colors.orangeAccent,
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
-          size: 28,
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          title: Text("Counter Page",
+            style: TextStyle(
+                color: Colors.white, fontWeight: FontWeight.bold
+            ),),
+          centerTitle: true,
+          elevation: 5,
+          backgroundColor: Colors.blueAccent,
         ),
-        splashColor: Colors.orange,
-      ),
 
-      body: BlocBuilder<CounterBloc, CounterState>(
-        builder: (context, state) {
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            context.read<CounterBloc>().add(CounterIncrementEvent());
+          },
+          shape: CircleBorder(),
+          backgroundColor: Colors.orangeAccent,
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
+            size: 28,
+          ),
+          splashColor: Colors.orange,
+        ),
 
-          switch(state.runtimeType){
-            case CounterIncrementState:
-              final successState = state as CounterIncrementState;
-              return Center(
-                child: Container(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("${successState.val.toString()}", style: TextStyle(
-                          fontSize: 60
-                      ),)
-                    ],
-                  ),
-                ),
+        body: BlocListener<CounterBloc, CounterState>(
+          listener: (context, state) {
+            if(state is CounterShowSnackBarActionState){
+               ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("Snackbar", selectionColor: Colors.red,))
               );
-            default:
-              return Center(child: Text("Not Found"),);
-          }
-        },
-      ),
+            }
+          },
+          child: Center(
+            child: Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("0", style: TextStyle(
+                      fontSize: 60
+                  ),),
+                  const SizedBox(height: 20,),
+
+                  ElevatedButton(
+                      onPressed: () {},
+                      child: Text("Add")
+                  ),
+                  const SizedBox(height: 20,),
+                  ElevatedButton(
+                      onPressed: () {
+                        context.read<CounterBloc>().add(CounterShowSnackBarEvent());
+                      },
+                      child: Text("Snackbar")
+                  ),
+
+                ],
+
+              ),
+            ),
+          ),
+        )
+
+//Bloc Builder
+      // body: BlocBuilder<CounterBloc, CounterState>(
+      //   builder: (context, state) {
+      //
+      //     switch(state.runtimeType){
+      //       case CounterIncrementState:
+      //         final successState = state as CounterIncrementState;
+      //         return Center(
+      //           child: Container(
+      //             child: Column(
+      //               mainAxisAlignment: MainAxisAlignment.center,
+      //               children: [
+      //                 Text("${successState.val.toString()}", style: TextStyle(
+      //                     fontSize: 60
+      //                 ),)
+      //               ],
+      //             ),
+      //           ),
+      //         );
+      //       default:
+      //         return Center(child: Text("Not Found"),);
+      //     }
+      //   },
+      // ),
+
+
     );
   }
 }

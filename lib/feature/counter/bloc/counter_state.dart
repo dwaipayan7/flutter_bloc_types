@@ -11,4 +11,9 @@ class CounterIncrementState extends CounterState{
   CounterIncrementState({required this.val});
 }
 
+abstract class CounterActionState extends CounterState{}
+
+class CounterShowSnackBarActionState extends CounterActionState{}
+
+
 
